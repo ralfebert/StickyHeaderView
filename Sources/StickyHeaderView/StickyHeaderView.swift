@@ -81,11 +81,8 @@ public struct StickyHeaderView<Header: View, Gradient: View, Content: View>: Vie
     }
 
     #Preview("Standalone") {
-        Text("Hello")
-            .sheet(isPresented: .constant(true)) {
-                NavigationStack {
-                    StickyHeaderExampleView()
-                }
-            }
+        NavigationStack {
+            StickyHeaderExampleView()
+        }
     }
 #endif
