@@ -16,7 +16,7 @@ public struct StickyHeaderView<Header: View, Gradient: View, Content: View>: Vie
             VStack(spacing: 0) {
                 header()
                     .frame(maxWidth: .infinity)
-                    .background(alignment: .bottom) {
+                    .background {
                         gradient()
                             .offset(y: -500)
                             .padding(.bottom, -500)
