@@ -1,13 +1,5 @@
 import SwiftUI
 
-struct BackgroundHeightPreferenceKey: PreferenceKey {
-    static let defaultValue: CGFloat = .zero
-
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = max(value, nextValue())
-    }
-}
-
 public struct StickyHeaderView<Header: View, Gradient: View, Content: View>: View {
     @ViewBuilder let header: () -> Header
     @ViewBuilder let gradient: () -> Gradient
@@ -20,29 +12,20 @@ public struct StickyHeaderView<Header: View, Gradient: View, Content: View>: Vie
     }
 
     public var body: some View {
-        GeometryReader { geometry in
-            ScrollView(.vertical) {
-                VStack(spacing: 0) {
-                    header()
-                        .frame(maxWidth: .infinity)
-                        .background(GeometryReader { geometry in
-                            Color.clear.preference(
-                                key: BackgroundHeightPreferenceKey.self,
-                                value: geometry.frame(in: .global).maxY
-                            )
-                        })
+        ScrollView(.vertical) {
+            VStack(spacing: 0) {
+                header()
+                    .frame(maxWidth: .infinity)
+                    .background(alignment: .bottom) {
+                        gradient()
+                            .offset(y: -500)
+                            .padding(.bottom, -500)
+                    }
 
-                    content()
-                }
-            }
-            .frame(maxWidth: .infinity)
-            .backgroundPreferenceValue(BackgroundHeightPreferenceKey.self, alignment: .top) { value in
-                // It seems, the background must go behind the ScrollView to go under the navigation bar
-                gradient()
-                    .frame(height: value - geometry.frame(in: .global).minY + geometry.safeAreaInsets.top, alignment: .top)
-                    .ignoresSafeArea(edges: .top)
+                content()
             }
         }
+        .frame(maxWidth: .infinity)
     }
 }
 
